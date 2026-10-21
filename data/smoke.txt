@@ -1,0 +1,5 @@
+The red bird sits beside the blue door.
+The blue bird sits beside the red door.
+A small model reads one token at a time.
+Each token can look back at the tokens before it.
+The model learns to predict the next token.
