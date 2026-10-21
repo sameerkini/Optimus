@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="510" viewBox="0 0 960 510" role="img" aria-labelledby="title description">
+  <title id="title">Optimus decoder-only Transformer architecture</title>
+  <desc id="description">Token IDs become column embeddings and pass through L pre-LayerNorm blocks, final normalization, and unembedding. Each block applies normalized causal attention with a residual addition, then a normalized MLP with another residual addition. Training supervises every valid position; generation samples from the last position.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#526277"/></marker>
+    <style>
+      text { font-family: ui-sans-serif, system-ui, sans-serif; text-anchor: middle; fill: #172c45; }
+      .label { font-size: 15px; font-weight: 600; }
+      .shape { font-size: 13px; fill: #465a72; }
+      .box { fill: #edf4ff; stroke: #8ba7cc; stroke-width: 1.4; rx: 9; }
+      .path { fill: none; stroke: #526277; stroke-width: 1.7; marker-end: url(#arrow); }
+      .add { fill: #fff; stroke: #8ba7cc; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="960" height="510" rx="12" fill="#ffffff"/>
+  <text x="480" y="30" class="label" style="font-size:20px">Optimus: token columns through a causal decoder</text>
+  <rect x="25" y="60" width="120" height="66" class="box"/>
+  <text x="85" y="85" class="label">Token IDs</text><text x="85" y="108" class="shape">(B, n)</text>
+  <path d="M145 93 H173" class="path"/>
+  <rect x="180" y="60" width="155" height="66" class="box"/>
+  <text x="257" y="85" class="label">Token embeddings</text><text x="257" y="108" class="shape">E: (d_emb, V)</text>
+  <path d="M335 93 H358" class="path"/>
+  <rect x="365" y="60" width="140" height="66" class="box" style="fill:#e2f3ee;stroke:#79ab99"/>
+  <text x="435" y="85" class="label">L blocks</text><text x="435" y="108" class="shape">(B, d_emb, n)</text>
+  <path d="M505 93 H528" class="path"/>
+  <rect x="535" y="60" width="110" height="66" class="box"/>
+  <text x="590" y="98" class="label">Final LN</text>
+  <path d="M645 93 H668" class="path"/>
+  <rect x="675" y="60" width="260" height="66" class="box"/>
+  <text x="805" y="85" class="label">Unembedding → raw logits</text><text x="805" y="108" class="shape">Eᵀ when tied; (B, V, n)</text>
+  <text x="480" y="151" class="shape">Hidden vectors are columns. Projections left-multiply: Y = W @ X + b.</text>
+  <rect x="25" y="180" width="910" height="195" rx="12" fill="#f7fbf9" stroke="#79ab99" stroke-dasharray="6 4"/>
+  <text x="480" y="205" class="label">Inside each block: pre-LN attention, residual add, pre-LN MLP, residual add</text>
+  <rect x="45" y="267" width="55" height="49" class="box"/>
+  <text x="72" y="297" class="label">X</text>
+  <path d="M100 292 H126" class="path"/>
+  <rect x="133" y="267" width="70" height="49" class="box"/>
+  <text x="168" y="297" class="label">LN</text>
+  <path d="M203 292 H229" class="path"/>
+  <rect x="236" y="259" width="140" height="65" class="box"/>
+  <text x="306" y="285" class="label">Causal attention</text><text x="306" y="307" class="shape">RoPE on Q and K</text>
+  <path d="M376 292 H402" class="path"/>
+  <circle cx="420" cy="292" r="17" class="add"/><text x="420" y="298" class="label" style="font-size:21px">+</text>
+  <path d="M110 292 V238 H420 V273" class="path"/>
+  <path d="M437 292 H463" class="path"/>
+  <rect x="470" y="267" width="70" height="49" class="box"/>
+  <text x="505" y="297" class="label">LN</text>
+  <path d="M540 292 H566" class="path"/>
+  <rect x="573" y="259" width="140" height="65" class="box"/>
+  <text x="643" y="285" class="label">MLP with GELU</text><text x="643" y="307" class="shape">d_emb → d_ff → d_emb</text>
+  <path d="M713 292 H739" class="path"/>
+  <circle cx="757" cy="292" r="17" class="add"/><text x="757" y="298" class="label" style="font-size:21px">+</text>
+  <path d="M447 292 V238 H757 V273" class="path"/>
+  <path d="M774 292 H800" class="path"/>
+  <rect x="807" y="267" width="108" height="49" class="box"/>
+  <text x="861" y="297" class="label">Next block</text>
+  <text x="480" y="353" class="shape">Every block preserves (B, d_emb, n). Each layer keeps its own K/V cache during decoding.</text>
+  <rect x="25" y="399" width="440" height="83" class="box"/>
+  <text x="245" y="426" class="label">Training: every valid token position</text>
+  <text x="245" y="450" class="shape">Shifted targets → cross-entropy → gradients → AdamW</text>
+  <text x="245" y="470" class="shape">Padded targets ignored; ordinary training has no KV cache.</text>
+  <rect x="495" y="399" width="440" height="83" class="box" style="fill:#e2f3ee;stroke:#79ab99"/>
+  <text x="715" y="426" class="label">Generation: use the final token's logits</text>
+  <text x="715" y="450" class="shape">Temperature → top-k → sample → append token ID</text>
+  <text x="715" y="470" class="shape">Prefill once, then process new token columns with cached K/V.</text>
+</svg>

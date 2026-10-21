@@ -8,26 +8,7 @@ No pretrained weights or completed language-quality benchmark are included. Smal
 
 ## Architecture and design decisions
 
-```mermaid
-flowchart TD
-    ids["Token IDs · B × n"] --> embedding["Learned token columns · B × d_emb × n"]
-    embedding --> x["Block input x"]
-    subgraph block["Repeat L transformer blocks"]
-        x --> ln1["LayerNorm over features"]
-        ln1 --> attention["Causal multi-head attention · RoPE on Q and K"]
-        attention --> add1["Residual add"]
-        x -->|residual| add1
-        add1 --> ln2["LayerNorm over features"]
-        ln2 --> mlp["Linear → GELU → Linear · d_ff defaults to 4 × d_emb"]
-        mlp --> add2["Residual add"]
-        add1 -->|residual| add2
-    end
-    add2 --> final["Final LayerNorm"]
-    final --> unembed["Unembedding · E transpose when weights are tied"]
-    unembed --> logits["Vocabulary logits · B × V × n"]
-    logits --> training["Training: cross-entropy at every valid position"]
-    logits --> decoding["Generation: final position → temperature / top-k → sampled ID"]
-```
+![Optimus architecture: token embeddings, L pre-LN residual blocks, final normalization, unembedding, and training or cached generation.](docs/architecture.svg)
 
 | Decision | Reason and tradeoff |
 | --- | --- |
