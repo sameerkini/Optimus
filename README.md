@@ -124,7 +124,7 @@ After preparing the corpus, run `python -m scripts.inspect_tokenizer`, `python -
 ```sh
 python -m pip install -r requirements-dev.txt
 python -m unittest discover -s tests -v
-pyright --pythonpath python
+pyright --pythonpath .venv/bin/python
 ```
 
-The tests cover masking, RoPE, gradients, full/cached equivalence, weight sharing, target alignment, inference exports, checkpointing, and exact CPU resume. They establish implementation behavior, not model quality. GitHub Actions runs the tests and type checking on Python 3.11.
+The tests cover masking, RoPE, gradients, full/cached equivalence, weight sharing, target alignment, inference exports, checkpointing, and exact CPU resume. They establish implementation behavior, not model quality. GitHub Actions runs the tests and type checking on Python 3.11. On Windows, give Pyright the interpreter path `.venv/Scripts/python.exe` instead.
