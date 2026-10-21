@@ -30,7 +30,7 @@ Derived documents exclude Gutenberg front matter and footer boilerplate while pr
 
 ## Custom documents
 
-The web interface accepts distinct UTF-8 text documents and prepares separate training, validation, and test splits. At least three documents are needed to give every split a document. More substantial held-out material is needed for useful evaluation.
+Prepare distinct UTF-8 text documents and assign whole documents to training, validation, and test splits. Each split must contain at least one document; more substantial held-out material is needed for useful evaluation.
 
 The CLI accepts a prepared corpus through `python -m src.train --manifest PATH`. A manifest contains a `documents` list; each entry has a corpus-relative `path`, `split` (`train`, `validation`/`val`, or `test`), and the file's SHA-256 as `sha256`. All splits must be nonempty. `src/data.py` rejects duplicate contents, duplicate/escaping paths, and changed files. Keep related or overlapping documents in the same split to avoid leakage beyond these exact-duplicate checks.
 
